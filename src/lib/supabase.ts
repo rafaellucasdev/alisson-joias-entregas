@@ -22,6 +22,12 @@ export function supabaseAdmin(): SupabaseClient {
 
   cached = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
+    // O Next.js cacheia `fetch` por padrão no App Router. Como o supabase-js
+    // usa fetch, leituras após escritas voltariam stale. Forçamos no-store
+    // para garantir dados sempre frescos (essencial nos fluxos de entrega).
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
   });
   return cached;
 }
