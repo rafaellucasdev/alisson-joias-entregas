@@ -37,6 +37,7 @@ create table if not exists motoboys (
 create table if not exists vendas (
   id              uuid primary key default gen_random_uuid(),
   cliente_id      uuid not null references clientes(id),
+  cliente_nome    text,                     -- snapshot do nome no momento da venda
   total           numeric(10, 2) not null check (total >= 0),
   tipo_entrega    text not null check (tipo_entrega in ('retirada', 'motoboy')),
   codigo_retirada text not null unique,     -- aleatório, alfanumérico (gerado via crypto)

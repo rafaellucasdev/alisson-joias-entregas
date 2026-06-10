@@ -138,6 +138,7 @@ export async function finalizarVenda(
       .from("vendas")
       .insert({
         cliente_id: cliente.id,
+        cliente_nome: input.cliente.nome.trim(),
         total,
         tipo_entrega: input.tipoEntrega,
         codigo_retirada: codigo,

@@ -12,6 +12,7 @@ type EntregaRow = {
   vendas: {
     id: string;
     codigo_retirada: string;
+    cliente_nome: string | null;
     total: number;
     tipo_entrega: TipoEntrega;
     situacao: string;
@@ -33,7 +34,7 @@ type EntregaRow = {
 const SELECT = `
   id, tipo, situacao, motoboy_id, endereco,
   vendas (
-    id, codigo_retirada, total, tipo_entrega, situacao, created_at,
+    id, codigo_retirada, cliente_nome, total, tipo_entrega, situacao, created_at,
     clientes ( nome, whatsapp )
   ),
   itens_entrega (
@@ -58,7 +59,7 @@ function mapear(row: EntregaRow): VendaResumo {
   return {
     vendaId: venda?.id ?? "",
     codigoRetirada: venda?.codigo_retirada ?? "",
-    cliente: venda?.clientes?.nome ?? "Cliente",
+    cliente: venda?.cliente_nome ?? venda?.clientes?.nome ?? "Cliente",
     total: Number(venda?.total ?? 0),
     tipoEntrega: (venda?.tipo_entrega ?? "retirada") as TipoEntrega,
     situacaoVenda: venda?.situacao ?? "",
@@ -126,7 +127,7 @@ export async function carregarPedidos(): Promise<PedidoResumo[]> {
   const { data, error } = await db
     .from("vendas")
     .select(
-      `id, codigo_retirada, total, tipo_entrega, created_at,
+      `id, codigo_retirada, cliente_nome, total, tipo_entrega, created_at,
        clientes ( nome ),
        entregas ( situacao, endereco, motoboys ( nome ), itens_entrega ( entregue ) )`,
     )
@@ -139,7 +140,7 @@ export async function carregarPedidos(): Promise<PedidoResumo[]> {
     return {
       vendaId: v.id,
       codigo: v.codigo_retirada,
-      cliente: v.clientes?.nome ?? "Cliente",
+      cliente: v.cliente_nome ?? v.clientes?.nome ?? "Cliente",
       total: Number(v.total ?? 0),
       tipoEntrega: (v.tipo_entrega ?? "retirada") as TipoEntrega,
       situacaoEntrega: entrega?.situacao ?? "pendente",
