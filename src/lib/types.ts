@@ -39,6 +39,19 @@ export type EntregaMotoboy = VendaResumo & {
   enderecoWhatsapp: string;
 };
 
+export type PedidoResumo = {
+  vendaId: string;
+  codigo: string;
+  cliente: string;
+  total: number;
+  tipoEntrega: TipoEntrega;
+  situacaoEntrega: string;
+  motoboy: string | null;
+  itensTotal: number;
+  itensEntregues: number;
+  criadaEm: string;
+};
+
 export type ActionResult<T> =
   | { ok: true; data: T }
   | { ok: false; erro: string };

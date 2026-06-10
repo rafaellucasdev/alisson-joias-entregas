@@ -24,9 +24,15 @@ const BikeIcon = (
     <path d="M8.5 17h6l-2.5-7H9m3 0l2 4m1.5-7H18l1 3m-12.5 4L9 6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+const ListIcon = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
+    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 const NAV: Item[] = [
   { href: "/", label: "PDV / Vendas", desc: "Registrar vendas", icon: CartIcon },
+  { href: "/pedidos", label: "Pedidos", desc: "Status das entregas", icon: ListIcon },
   { href: "/retirada", label: "Retirada na Loja", desc: "Confirmar retiradas", icon: StoreIcon },
   { href: "/motoboy", label: "Entregas — Motoboy", desc: "Área do entregador", icon: BikeIcon },
 ];

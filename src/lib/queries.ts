@@ -1,6 +1,6 @@
 import "server-only";
 import { supabaseAdmin } from "./supabase";
-import type { VendaResumo, ItemEntregaView, TipoEntrega } from "./types";
+import type { VendaResumo, ItemEntregaView, TipoEntrega, PedidoResumo } from "./types";
 
 // Linha "crua" devolvida pelo embed do Supabase.
 type EntregaRow = {
@@ -116,6 +116,37 @@ export async function carregarEntregasPorMotoboy(
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   return ((data as unknown as EntregaRow[]) ?? []).filter((r) => r.vendas).map(mapear);
+}
+
+/** Todos os pedidos (vendas) com status da entrega — para o painel operacional. */
+export async function carregarPedidos(): Promise<PedidoResumo[]> {
+  const db = supabaseAdmin();
+  const { data, error } = await db
+    .from("vendas")
+    .select(
+      `id, codigo_retirada, total, tipo_entrega, created_at,
+       clientes ( nome ),
+       entregas ( situacao, motoboys ( nome ), itens_entrega ( entregue ) )`,
+    )
+    .order("created_at", { ascending: false });
+  if (error) throw new Error(error.message);
+
+  return ((data as unknown as any[]) ?? []).map((v) => {
+    const entrega = Array.isArray(v.entregas) ? v.entregas[0] : v.entregas;
+    const itens = (entrega?.itens_entrega ?? []) as Array<{ entregue: boolean }>;
+    return {
+      vendaId: v.id,
+      codigo: v.codigo_retirada,
+      cliente: v.clientes?.nome ?? "Cliente",
+      total: Number(v.total ?? 0),
+      tipoEntrega: (v.tipo_entrega ?? "retirada") as TipoEntrega,
+      situacaoEntrega: entrega?.situacao ?? "pendente",
+      motoboy: entrega?.motoboys?.nome ?? null,
+      itensTotal: itens.length,
+      itensEntregues: itens.filter((i) => i.entregue).length,
+      criadaEm: v.created_at ?? "",
+    };
+  });
 }
 
 export async function carregarEntregaPorId(
