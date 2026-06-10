@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import "./globals.css";
+import { Sidebar } from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "Alisson Joias — Entregas",
   description: "PDV + Módulo de Entregas com WhatsApp",
 };
-
-const NAV = [
-  { href: "/", label: "PDV" },
-  { href: "/retirada", label: "Retirada na Loja" },
-  { href: "/motoboy", label: "Motoboy" },
-];
 
 export default function RootLayout({
   children,
@@ -21,25 +15,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="min-h-screen">
-        <header className="border-b border-slate-200 bg-white">
-          <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-            <Link href="/" className="text-lg font-bold text-brand">
-              💎 Alisson Joias
-            </Link>
-            <nav className="flex gap-1 text-sm">
-              {NAV.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="rounded-lg px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </header>
-        <main className="mx-auto max-w-5xl px-4 py-6">{children}</main>
+        <Sidebar />
+        <div className="lg:pl-64">
+          <main className="mx-auto max-w-6xl px-4 py-6 lg:py-8">{children}</main>
+        </div>
       </body>
     </html>
   );

@@ -5,9 +5,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Acento dourado (joalheria)
         brand: {
-          DEFAULT: "#16a34a",
-          dark: "#15803d",
+          DEFAULT: "#d97706",
+          dark: "#b45309",
+          light: "#fbbf24",
         },
       },
     },
