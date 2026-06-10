@@ -174,11 +174,12 @@ export function PDV({
         {/* ------------------------- Produtos ------------------------- */}
         <section>
           <div className="relative mb-4">
-            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-2.5 h-5 w-5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="11" cy="11" r="7" /><path d="M21 21l-4-4" strokeLinecap="round" />
+            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M16.5 16.5L21 21" strokeLinecap="round" />
             </svg>
             <input
-              className="field pl-10"
+              className="field pl-11"
               placeholder="Buscar joia…"
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
