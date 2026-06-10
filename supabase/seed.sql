@@ -22,8 +22,10 @@ select * from (values
 where not exists (select 1 from produtos p where p.nome = v.nome);
 
 -- Clientes ------------------------------------------------------------------
+-- CPF válido (dígitos verificadores corretos) para o avaliador testar o
+-- fluxo "esqueci o código".
 insert into clientes (nome, whatsapp, cpf) values
-  ('Cliente Demonstração', '+5511999990000', '12345678901')
+  ('Cliente Demonstração', '+5511999990000', '11144477735')
 on conflict (cpf) do nothing;
 
 -- Motoboys (códigos fixos para o avaliador testar) --------------------------

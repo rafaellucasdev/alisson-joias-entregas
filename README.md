@@ -103,7 +103,7 @@ Acesse http://localhost:3000
 |---|---|
 | **Código do Motoboy 1** (Carlos) | `MOTO-A1B2` |
 | **Código do Motoboy 2** (Ana) | `MOTO-C3D4` |
-| Cliente de exemplo (CPF) | `123.456.789-01` |
+| Cliente de exemplo (CPF) | `111.444.777-35` |
 
 > O **código do cliente** (código de retirada) é gerado a cada venda e aparece na
 > tela de confirmação + é enviado por WhatsApp. Anote-o para testar os fluxos.
