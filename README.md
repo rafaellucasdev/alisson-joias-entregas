@@ -6,6 +6,14 @@ Server Actions) sobre **Supabase**, sem backend desacoplado.
 
 > Loja fictícia: **Alisson Joias** (joalheria)
 
+## 🔗 Links
+
+- **App em produção:** https://alisson-joias-entregas.vercel.app
+- **Repositório:** https://github.com/rafaellucasdev/alisson-joias-entregas
+
+> Para testar rápido sem instalar nada, use o app em produção acima. As seções
+> abaixo cobrem como rodar localmente do zero.
+
 ## Stack
 
 - **Next.js 14** (App Router) + **React 18** + **TypeScript**
