@@ -30,7 +30,10 @@ export function PDV({
   const [cpf, setCpf] = useState("");
   const [tipoEntrega, setTipoEntrega] = useState<TipoEntrega>("retirada");
   const [motoboyId, setMotoboyId] = useState("");
-  const [endereco, setEndereco] = useState("");
+  const [rua, setRua] = useState("");
+  const [numero, setNumero] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [confirmacao, setConfirmacao] = useState<Confirmacao | null>(null);
@@ -69,7 +72,10 @@ export function PDV({
       itens: Object.entries(carrinho).map(([produtoId, quantidade]) => ({ produtoId, quantidade })),
       tipoEntrega,
       motoboyId: tipoEntrega === "motoboy" ? motoboyId : null,
-      endereco: tipoEntrega === "motoboy" ? endereco : null,
+      endereco:
+        tipoEntrega === "motoboy"
+          ? { rua, numero, bairro, complemento }
+          : null,
     });
     setLoading(false);
     if (!res.ok) return setErro(res.erro);
@@ -90,7 +96,10 @@ export function PDV({
     setCpf("");
     setTipoEntrega("retirada");
     setMotoboyId("");
-    setEndereco("");
+    setRua("");
+    setNumero("");
+    setBairro("");
+    setComplemento("");
     setConfirmacao(null);
     setErro(null);
     setCopiado(false);
@@ -297,13 +306,17 @@ export function PDV({
                     <option key={m.id} value={m.id}>{m.nome}</option>
                   ))}
                 </select>
-                <textarea
-                  className="field"
-                  rows={2}
-                  placeholder="Endereço de entrega (rua, nº, bairro, complemento)"
-                  value={endereco}
-                  onChange={(e) => setEndereco(e.target.value)}
-                />
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <span className="label">Endereço de entrega</span>
+                  <div className="space-y-2">
+                    <input className="field" placeholder="Rua / Logradouro" value={rua} onChange={(e) => setRua(e.target.value)} />
+                    <div className="grid grid-cols-3 gap-2">
+                      <input className="field col-span-1" placeholder="Nº" value={numero} onChange={(e) => setNumero(e.target.value)} />
+                      <input className="field col-span-2" placeholder="Bairro" value={bairro} onChange={(e) => setBairro(e.target.value)} />
+                    </div>
+                    <input className="field" placeholder="Complemento (opcional)" value={complemento} onChange={(e) => setComplemento(e.target.value)} />
+                  </div>
+                </div>
               </div>
             )}
           </div>

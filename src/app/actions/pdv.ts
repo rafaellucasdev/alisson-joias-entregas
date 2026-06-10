@@ -19,7 +19,12 @@ type FinalizarInput = {
   itens: ItemInput[];
   tipoEntrega: TipoEntrega;
   motoboyId?: string | null;
-  endereco?: string | null;
+  endereco?: {
+    rua?: string;
+    numero?: string;
+    bairro?: string;
+    complemento?: string;
+  } | null;
 };
 
 type FinalizarOutput = {
@@ -64,8 +69,9 @@ export async function finalizarVenda(
     if (!input.motoboyId) {
       return { ok: false, erro: "Selecione um motoboy para a entrega." };
     }
-    if (!textoNaoVazio(input.endereco, 5)) {
-      return { ok: false, erro: "Informe o endereço de entrega." };
+    const e = input.endereco;
+    if (!textoNaoVazio(e?.rua, 2) || !textoNaoVazio(e?.numero, 1) || !textoNaoVazio(e?.bairro, 2)) {
+      return { ok: false, erro: "Preencha rua, número e bairro da entrega." };
     }
     const { data: mb } = await db
       .from("motoboys")
@@ -76,7 +82,8 @@ export async function finalizarVenda(
       return { ok: false, erro: "Motoboy inválido ou inativo." };
     }
     motoboyId = mb.id;
-    endereco = input.endereco!.trim();
+    const compl = textoNaoVazio(e!.complemento) ? ` (${e!.complemento!.trim()})` : "";
+    endereco = `${e!.rua!.trim()}, ${e!.numero!.trim()} - ${e!.bairro!.trim()}${compl}`;
   }
 
   // ---- Recalcula preços a partir do banco (não confia no client) -----------
