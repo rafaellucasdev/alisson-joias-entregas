@@ -2,7 +2,7 @@ import "server-only";
 import twilio from "twilio";
 import { normalizarWhatsapp } from "./validators";
 
-const NOME_LOJA = process.env.NOME_LOJA || "Mercado HoldPrint";
+const NOME_LOJA = process.env.NOME_LOJA || "Alisson Joias";
 
 type Resultado =
   | { enviado: true; sid: string; status: string; numeroUsado: string }

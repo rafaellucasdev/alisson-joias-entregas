@@ -1,23 +1,23 @@
 -- ============================================================================
---  Seed — produtos, clientes e motoboys fictícios
+--  Seed — produtos (joias), clientes e motoboys fictícios
 --  Idempotente: pode rodar mais de uma vez sem duplicar.
 -- ============================================================================
 
--- Produtos (mínimo 10) ------------------------------------------------------
+-- Produtos (mínimo 10) — catálogo de joalheria -----------------------------
 insert into produtos (nome, preco)
 select * from (values
-  ('Arroz Branco 5kg',          27.90),
-  ('Feijão Carioca 1kg',         8.49),
-  ('Óleo de Soja 900ml',         7.29),
-  ('Açúcar Refinado 1kg',        4.99),
-  ('Café Torrado 500g',         18.90),
-  ('Leite Integral 1L',          5.49),
-  ('Macarrão Espaguete 500g',    4.29),
-  ('Molho de Tomate 340g',       3.79),
-  ('Sabão em Pó 1kg',           14.90),
-  ('Detergente Neutro 500ml',    2.49),
-  ('Papel Higiênico 12un',      22.90),
-  ('Refrigerante 2L',            8.99)
+  ('Anel Solitário de Ouro 18k',     2890.00),
+  ('Aliança de Ouro 18k (par)',      3450.00),
+  ('Brinco de Diamante',             1990.00),
+  ('Colar de Pérolas',               1290.00),
+  ('Corrente de Ouro Masculina',     2150.00),
+  ('Pingente Coração de Ouro',        690.00),
+  ('Pulseira de Prata 925',           320.00),
+  ('Anel de Prata com Zircônia',      240.00),
+  ('Relógio de Pulso Dourado',        850.00),
+  ('Conjunto Colar + Brinco',        1450.00),
+  ('Aliança de Prata 925 (par)',      560.00),
+  ('Tornozeleira de Prata',           180.00)
 ) as v(nome, preco)
 where not exists (select 1 from produtos p where p.nome = v.nome);
 

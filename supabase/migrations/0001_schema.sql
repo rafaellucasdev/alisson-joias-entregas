@@ -71,7 +71,7 @@ create table if not exists entregas (
 create table if not exists itens_entrega (
   id            uuid primary key default gen_random_uuid(),
   entrega_id    uuid not null references entregas(id) on delete cascade,
-  item_venda_id uuid not null references itens_venda(id),
+  item_venda_id uuid not null references itens_venda(id) on delete cascade,
   quantidade    int not null check (quantidade > 0),
   entregue      boolean not null default false,
   entregue_em   timestamptz,

@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Mercado HoldPrint — Entregas",
+  title: "Alisson Joias — Entregas",
   description: "PDV + Módulo de Entregas com WhatsApp",
 };
 
@@ -24,7 +24,7 @@ export default function RootLayout({
         <header className="border-b border-slate-200 bg-white">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
             <Link href="/" className="text-lg font-bold text-brand">
-              🛒 Mercado HoldPrint
+              💎 Alisson Joias
             </Link>
             <nav className="flex gap-1 text-sm">
               {NAV.map((item) => (

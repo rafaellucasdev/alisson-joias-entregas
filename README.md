@@ -4,7 +4,7 @@ PDV mínimo + **módulo de entregas completo** (retirada na loja e motoboy) com 
 do código de retirada por **WhatsApp**. Tudo roda dentro do Next.js (App Router +
 Server Actions) sobre **Supabase**, sem backend desacoplado.
 
-> Loja fictícia: **Mercado HoldPrint**
+> Loja fictícia: **Alisson Joias** (joalheria)
 
 ## Stack
 
