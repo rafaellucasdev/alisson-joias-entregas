@@ -73,6 +73,12 @@ Esse comando cria **todas as tabelas** e insere os **dados fictícios**
    sandbox **uma vez**. Pelo WhatsApp, envie `join <duas-palavras>` (a frase que o
    Twilio mostra na tela) para `+1 415 523 8886`. Depois disso aquele número recebe as mensagens.
 
+> **Pegadinha do 9º dígito (Brasil):** o WhatsApp às vezes registra números
+> brasileiros **sem o 9** após o DDD. Por isso o envio (`src/lib/whatsapp.ts`)
+> **confirma o status real** da entrega no Twilio e, se falhar, **reenvia
+> automaticamente** na variante alternativa (com/sem o 9). Assim a mensagem
+> chega independentemente de como o número foi registrado.
+
 ### 2.6. Rodar
 
 ```bash
