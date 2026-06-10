@@ -30,6 +30,7 @@ export function PDV({
   const [cpf, setCpf] = useState("");
   const [tipoEntrega, setTipoEntrega] = useState<TipoEntrega>("retirada");
   const [motoboyId, setMotoboyId] = useState("");
+  const [endereco, setEndereco] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [confirmacao, setConfirmacao] = useState<Confirmacao | null>(null);
@@ -68,6 +69,7 @@ export function PDV({
       itens: Object.entries(carrinho).map(([produtoId, quantidade]) => ({ produtoId, quantidade })),
       tipoEntrega,
       motoboyId: tipoEntrega === "motoboy" ? motoboyId : null,
+      endereco: tipoEntrega === "motoboy" ? endereco : null,
     });
     setLoading(false);
     if (!res.ok) return setErro(res.erro);
@@ -88,6 +90,7 @@ export function PDV({
     setCpf("");
     setTipoEntrega("retirada");
     setMotoboyId("");
+    setEndereco("");
     setConfirmacao(null);
     setErro(null);
     setCopiado(false);
@@ -287,12 +290,21 @@ export function PDV({
             </div>
 
             {tipoEntrega === "motoboy" && (
-              <select className="field" value={motoboyId} onChange={(e) => setMotoboyId(e.target.value)}>
-                <option value="">Selecione o motoboy…</option>
-                {motoboys.map((m) => (
-                  <option key={m.id} value={m.id}>{m.nome}</option>
-                ))}
-              </select>
+              <div className="space-y-2">
+                <select className="field" value={motoboyId} onChange={(e) => setMotoboyId(e.target.value)}>
+                  <option value="">Selecione o motoboy…</option>
+                  {motoboys.map((m) => (
+                    <option key={m.id} value={m.id}>{m.nome}</option>
+                  ))}
+                </select>
+                <textarea
+                  className="field"
+                  rows={2}
+                  placeholder="Endereço de entrega (rua, nº, bairro, complemento)"
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
+                />
+              </div>
             )}
           </div>
 

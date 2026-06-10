@@ -8,6 +8,7 @@ type EntregaRow = {
   tipo: TipoEntrega;
   situacao: string;
   motoboy_id: string | null;
+  endereco: string | null;
   vendas: {
     id: string;
     codigo_retirada: string;
@@ -30,7 +31,7 @@ type EntregaRow = {
 };
 
 const SELECT = `
-  id, tipo, situacao, motoboy_id,
+  id, tipo, situacao, motoboy_id, endereco,
   vendas (
     id, codigo_retirada, total, tipo_entrega, situacao, created_at,
     clientes ( nome, whatsapp )
@@ -63,6 +64,7 @@ function mapear(row: EntregaRow): VendaResumo {
     situacaoVenda: venda?.situacao ?? "",
     entregaId: row.id,
     situacaoEntrega: row.situacao,
+    endereco: row.endereco ?? null,
     criadaEm: venda?.created_at ?? "",
     itens,
   };
@@ -126,7 +128,7 @@ export async function carregarPedidos(): Promise<PedidoResumo[]> {
     .select(
       `id, codigo_retirada, total, tipo_entrega, created_at,
        clientes ( nome ),
-       entregas ( situacao, motoboys ( nome ), itens_entrega ( entregue ) )`,
+       entregas ( situacao, endereco, motoboys ( nome ), itens_entrega ( entregue ) )`,
     )
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
@@ -142,6 +144,7 @@ export async function carregarPedidos(): Promise<PedidoResumo[]> {
       tipoEntrega: (v.tipo_entrega ?? "retirada") as TipoEntrega,
       situacaoEntrega: entrega?.situacao ?? "pendente",
       motoboy: entrega?.motoboys?.nome ?? null,
+      endereco: entrega?.endereco ?? null,
       itensTotal: itens.length,
       itensEntregues: itens.filter((i) => i.entregue).length,
       criadaEm: v.created_at ?? "",

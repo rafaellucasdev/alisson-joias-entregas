@@ -19,6 +19,7 @@ type FinalizarInput = {
   itens: ItemInput[];
   tipoEntrega: TipoEntrega;
   motoboyId?: string | null;
+  endereco?: string | null;
 };
 
 type FinalizarOutput = {
@@ -58,9 +59,13 @@ export async function finalizarVenda(
 
   // ---- Motoboy (se aplicável): precisa existir e estar ativo ---------------
   let motoboyId: string | null = null;
+  let endereco: string | null = null;
   if (input.tipoEntrega === "motoboy") {
     if (!input.motoboyId) {
       return { ok: false, erro: "Selecione um motoboy para a entrega." };
+    }
+    if (!textoNaoVazio(input.endereco, 5)) {
+      return { ok: false, erro: "Informe o endereço de entrega." };
     }
     const { data: mb } = await db
       .from("motoboys")
@@ -71,6 +76,7 @@ export async function finalizarVenda(
       return { ok: false, erro: "Motoboy inválido ou inativo." };
     }
     motoboyId = mb.id;
+    endereco = input.endereco!.trim();
   }
 
   // ---- Recalcula preços a partir do banco (não confia no client) -----------
@@ -170,6 +176,7 @@ export async function finalizarVenda(
       tipo: input.tipoEntrega,
       situacao: "pendente",
       motoboy_id: motoboyId,
+      endereco,
     })
     .select("id")
     .single();

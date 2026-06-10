@@ -119,7 +119,7 @@ Acesse http://localhost:3000
 1. Adicione produtos ao carrinho (botão **+**).
 2. Preencha **Nome / WhatsApp / CPF** do cliente.
 3. Escolha o tipo de entrega: **🏬 Loja** ou **🛵 Motoboy**
-   (se motoboy, selecione um na lista).
+   (se motoboy, selecione o entregador e informe o **endereço de entrega**).
 4. Clique **Finalizar venda** → aparece a **tela de confirmação** com o
    **código de retirada** e o status do envio do WhatsApp.
 

@@ -3,7 +3,7 @@
 //  Uso:  npm run db:push
 //  Requer DATABASE_URL no .env.local (Supabase > Settings > Database > URI).
 // ============================================================================
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { config } from "dotenv";
@@ -21,7 +21,10 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const schema = readFileSync(join(root, "supabase/migrations/0001_schema.sql"), "utf8");
+const migrationsDir = join(root, "supabase/migrations");
+const migrations = readdirSync(migrationsDir)
+  .filter((f) => f.endsWith(".sql"))
+  .sort();
 const seed = readFileSync(join(root, "supabase/seed.sql"), "utf8");
 
 const client = new pg.Client({
@@ -31,8 +34,10 @@ const client = new pg.Client({
 
 try {
   await client.connect();
-  console.log("→ Aplicando schema (0001_schema.sql)...");
-  await client.query(schema);
+  for (const file of migrations) {
+    console.log(`→ Aplicando migration (${file})...`);
+    await client.query(readFileSync(join(migrationsDir, file), "utf8"));
+  }
   console.log("→ Aplicando seed (seed.sql)...");
   await client.query(seed);
   console.log("\n✅ Banco pronto! Tabelas criadas e dados de exemplo inseridos.\n");

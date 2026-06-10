@@ -107,6 +107,9 @@ export function PedidosLista({ pedidos }: { pedidos: PedidoResumo[] }) {
                     <div className="text-xs text-slate-500">
                       {dataHora(p.criadaEm)} · {brl(p.total)}
                     </div>
+                    {p.endereco && (
+                      <div className="mt-0.5 text-xs text-slate-500">📍 {p.endereco}</div>
+                    )}
                   </div>
                 </div>
 

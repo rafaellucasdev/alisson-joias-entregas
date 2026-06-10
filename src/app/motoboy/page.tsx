@@ -224,6 +224,13 @@ function CardEntrega({
         </span>
       </div>
 
+      {entrega.endereco && (
+        <div className="mb-2 flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
+          <span>📍</span>
+          <span>{entrega.endereco}</span>
+        </div>
+      )}
+
       {/* Liberação: exige código do cliente */}
       {!liberado && !concluida && (
         <div className="mt-2">

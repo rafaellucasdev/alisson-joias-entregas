@@ -63,6 +63,7 @@ create table if not exists entregas (
   situacao     text not null default 'pendente'
                  check (situacao in ('pendente', 'parcial', 'concluida')),
   motoboy_id   uuid references motoboys(id),
+  endereco     text,                        -- endereço de entrega (obrigatório p/ motoboy)
   responsavel  text,                        -- quem confirmou a retirada na loja
   concluida_em timestamptz,
   created_at   timestamptz not null default now()

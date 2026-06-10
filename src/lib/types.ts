@@ -31,6 +31,7 @@ export type VendaResumo = {
   situacaoVenda: string;
   entregaId: string;
   situacaoEntrega: string;
+  endereco: string | null;
   criadaEm: string;
   itens: ItemEntregaView[];
 };
@@ -47,6 +48,7 @@ export type PedidoResumo = {
   tipoEntrega: TipoEntrega;
   situacaoEntrega: string;
   motoboy: string | null;
+  endereco: string | null;
   itensTotal: number;
   itensEntregues: number;
   criadaEm: string;
