@@ -3,38 +3,26 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/lib/auth";
 
 type Item = { href: string; label: string; desc: string; icon: JSX.Element };
 
-const CartIcon = (
+const KanbanIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
-    <path d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13L5.4 5M7 13l-2 4h12" strokeLinecap="round" strokeLinejoin="round" />
-    <circle cx="9" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" />
+    <rect x="3" y="4" width="5" height="16" rx="1" />
+    <rect x="10" y="4" width="5" height="10" rx="1" />
+    <rect x="17" y="4" width="4" height="13" rx="1" />
   </svg>
 );
-const StoreIcon = (
+const ChartIcon = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
-    <path d="M3 9l1.5-5h15L21 9M4 9h16v10a1 1 0 01-1 1H5a1 1 0 01-1-1V9zM4 9a2.5 2.5 0 005 0 2.5 2.5 0 005 0 2.5 2.5 0 005 0" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M9 20v-5h6v5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-const BikeIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
-    <circle cx="5.5" cy="17" r="3" /><circle cx="18.5" cy="17" r="3" />
-    <path d="M8.5 17h6l-2.5-7H9m3 0l2 4m1.5-7H18l1 3m-12.5 4L9 6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-const ListIcon = (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-5 w-5">
-    <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const NAV: Item[] = [
-  { href: "/", label: "PDV / Vendas", desc: "Registrar vendas", icon: CartIcon },
-  { href: "/pedidos", label: "Pedidos", desc: "Status das entregas", icon: ListIcon },
-  { href: "/retirada", label: "Retirada na Loja", desc: "Confirmar retiradas", icon: StoreIcon },
-  { href: "/motoboy", label: "Entregas — Motoboy", desc: "Área do entregador", icon: BikeIcon },
+  { href: "/", label: "Kanban", desc: "Quadro de tarefas", icon: KanbanIcon },
+  { href: "/progresso", label: "Progresso", desc: "Visão geral e barras", icon: ChartIcon },
 ];
 
 function Brand() {
@@ -43,7 +31,7 @@ function Brand() {
       <span className="text-2xl">💎</span>
       <div className="leading-tight">
         <div className="font-bold text-white">Alisson Joias</div>
-        <div className="text-[11px] text-slate-400">Entregas &amp; Retiradas</div>
+        <div className="text-[11px] text-slate-400">Progresso do ERP</div>
       </div>
     </Link>
   );
@@ -78,12 +66,29 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+function Rodape() {
+  const { usuario, sair } = useAuth();
+  return (
+    <div className="absolute inset-x-0 bottom-4 px-4">
+      <div className="rounded-xl bg-white/5 px-3 py-2.5">
+        <div className="truncate text-sm font-semibold text-white">{usuario?.nome}</div>
+        <div className="mb-2 text-[11px] capitalize text-slate-400">{usuario?.papel}</div>
+        <button
+          onClick={sair}
+          className="w-full rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white"
+        >
+          Sair
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function Sidebar() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {/* Topbar mobile */}
       <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
         <button
           aria-label="Abrir menu"
@@ -94,18 +99,13 @@ export function Sidebar() {
             <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
           </svg>
         </button>
-        <span className="font-bold">💎 Alisson Joias</span>
+        <span className="font-bold">💎 Progresso do ERP</span>
       </header>
 
-      {/* Overlay mobile */}
       {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
-          onClick={() => setOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-slate-900 pb-6 pt-5 transition-transform lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
@@ -125,10 +125,7 @@ export function Sidebar() {
         </div>
 
         <NavLinks onNavigate={() => setOpen(false)} />
-
-        <div className="absolute inset-x-0 bottom-4 px-5 text-[11px] text-slate-500">
-          PDV + Módulo de Entregas
-        </div>
+        <Rodape />
       </aside>
     </>
   );

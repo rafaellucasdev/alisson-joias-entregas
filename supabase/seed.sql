@@ -1,35 +1,73 @@
 -- ============================================================================
---  Seed — produtos (joias), clientes e motoboys fictícios
---  Idempotente: pode rodar mais de uma vez sem duplicar.
+--  Seed — Módulo Financeiro (levantamento inicial + análise de urgência/
+--  prioridade recomendada pela IA DeepSeek).
+--  Idempotente: on conflict (modulo_id, codigo) do nothing → NÃO sobrescreve
+--  ajustes que o time fizer no PWA depois.
 -- ============================================================================
 
--- Produtos (mínimo 10) — catálogo de joalheria -----------------------------
-insert into produtos (nome, preco)
-select * from (values
-  ('Anel Solitário de Ouro 18k',     2890.00),
-  ('Aliança de Ouro 18k (par)',      3450.00),
-  ('Brinco de Diamante',             1990.00),
-  ('Colar de Pérolas',               1290.00),
-  ('Corrente de Ouro Masculina',     2150.00),
-  ('Pingente Coração de Ouro',        690.00),
-  ('Pulseira de Prata 925',           320.00),
-  ('Anel de Prata com Zircônia',      240.00),
-  ('Relógio de Pulso Dourado',        850.00),
-  ('Conjunto Colar + Brinco',        1450.00),
-  ('Aliança de Prata 925 (par)',      560.00),
-  ('Tornozeleira de Prata',           180.00)
-) as v(nome, preco)
-where not exists (select 1 from produtos p where p.nome = v.nome);
+-- 1) Módulo ------------------------------------------------------------------
+insert into modulos (nome, slug, ordem)
+values ('Financeiro', 'financeiro', 1)
+on conflict (slug) do nothing;
 
--- Clientes ------------------------------------------------------------------
--- CPF válido (dígitos verificadores corretos) para o avaliador testar o
--- fluxo "esqueci o código".
-insert into clientes (nome, whatsapp, cpf) values
-  ('Cliente Demonstração', '+5511999990000', '11144477735')
-on conflict (cpf) do nothing;
+-- 2) Tarefas -----------------------------------------------------------------
+with m as (select id from modulos where slug = 'financeiro')
+insert into tarefas
+  (modulo_id, codigo, titulo, descricao, impacto, tipo, categoria, status, prioridade, urgencia, analise_ia, analisado_em, branch, criterio_teste, ordem)
+select m.id, v.* from m,
+(values
+  -- ===== FEITO (18) =====================================================
+  ('FIN-001','Lib do Asaas (cliente HTTP da API)','Cliente que fala com todos os endpoints do Asaas: clientes, cobrancas, Pague Contas, transferencias PIX/TED e QR Code.','Alicerce: toda a integracao Asaas depende dessa camada.','infra'::tarefa_tipo,'Integração Asaas','done'::tarefa_status,'media'::tarefa_prioridade,null::tarefa_prioridade,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null::text,1::numeric),
+  ('FIN-002','Migrations das colunas Asaas (330/331/332)','Colunas asaas_ em contas_pagar e contas_receber + aprovado_em/aprovado_por.','Permite vincular e rastrear pagamentos do Asaas.','infra','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,2),
+  ('FIN-003','Modal Pagar com Asaas (PIX/Boleto/TED/QRCode)','Modal com 4 tipos de pagamento e validacao visual em tempo real.','Operador paga sem sair do ERP, com validacao que evita erro.','melhoria','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,3),
+  ('FIN-004','Deteccao automatica do tipo de chave PIX','Detecta CPF/CNPJ/EMAIL/PHONE pela chave colada.','Evita o erro mais comum da API (tipo de chave errado).','melhoria','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,4),
+  ('FIN-005','Aprovacao em 2 etapas (solicita depois aprova)','Solicita pagamento (aguardando) e so chama o Asaas apos aprovacao.','Controle total: nenhum pagamento sai sem aprovacao.','seguranca','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,5),
+  ('FIN-006','Webhook de confirmacao de pagamento','Recebe PAYMENT_BILL_PAID e atualiza a situacao para pago.','Status reflete a realidade do Asaas sem acao manual.','infra','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,6),
+  ('FIN-007','Webhook de validacao de saque','Asaas pergunta antes de pagar; o ERP responde aprovado.','Camada extra: barra pagamento nao autorizado mesmo com a chave.','seguranca','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,7),
+  ('FIN-008','Paginacao e busca no Contas a Pagar','15 por pagina + busca com debounce + cards via SQL.','Todas as contas ficam acessiveis; busca economiza tempo.','melhoria','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,8),
+  ('FIN-009','Validacao da chave PIX no servidor','Valida no navegador e tambem no backend.','Evita burlar o modal e enviar dados invalidos a API.','seguranca','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,9),
+  ('FIN-010','Badge colorido de status na tabela','Cor + texto por status, com tooltip de envio/aprovacao.','Gerente bate o olho e sabe o status de cada pagamento.','melhoria','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,10),
+  ('FIN-011','Codigo do Inter removido da UI','Botoes e modais do Inter comentados; coluna so mostra Asaas.','Interface mais limpa; codigo do Inter guardado para referencia.','limpeza','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,11),
+  ('FIN-012','Credenciais Asaas guardadas com seguranca','Chave e ambiente em configuracoes_secrets, em cache, fora dos logs.','A chave secreta nao vaza.','seguranca','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,12),
+  ('FIN-013','Testes no Sandbox do Asaas','Cobranca, Pague Contas, transferencia e cancelamento testados.','Validacao antes da producao; reduz risco com dinheiro real.','infra','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,13),
+  ('FIN-014','Pagamento PIX com chave ficticia do BACEN','Uso de chaves de teste do Banco Central no Sandbox.','Testa o fluxo PIX de ponta a ponta sem chaves reais.','infra','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,14),
+  ('FIN-015','Rastreamento via externalReference (CP-id)','Toda chamada leva uma referencia externa CP-id.','Webhook acha a conta certa mesmo com race condition.','melhoria','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,15),
+  ('FIN-016','Debounce na busca do A Pagar','Espera 300ms apos a ultima tecla antes de consultar.','Banco nao recebe uma query por letra; experiencia mais fluida.','performance','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,16),
+  ('FIN-017','Migracao 332 executada','Colunas asaas_aprovado_em e asaas_aprovado_por em contas_pagar.','Base para auditoria de aprovacoes.','infra','Integração Asaas','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,17),
+  ('FIN-018','Colunas inter_ e asaas_ na query de dados','A consulta de dados passou a buscar todas as colunas de integracao.','Sem isso as colunas existiam mas nao apareciam na tela.','melhoria','Contas a Pagar','done','media',null,'Concluido na branch feat/asaas-integração.',now(),'feat/asaas-integração',null,18),
 
--- Motoboys (códigos fixos para o avaliador testar) --------------------------
-insert into motoboys (nome, whatsapp, codigo) values
-  ('Carlos Silva (Motoboy)', '+5511988887777', 'MOTO-A1B2'),
-  ('Ana Souza (Motoboy)',    '+5511977776666', 'MOTO-C3D4')
-on conflict (codigo) do nothing;
+  -- ===== FAZENDO (1) ====================================================
+  ('FIN-019','Refatoracao: acoes (aprovar/rejeitar/editar) + edicao de solicitacoes + chave de producao','Coluna de acoes em todas as linhas, modo edicao no modal e chave de producao configurada.','Conclui o fluxo de A Pagar e conecta a producao (api.asaas.com).','refatoracao','Contas a Pagar','doing','alta','alta','Em andamento; fecha o fluxo do A Pagar. Proximo marco e testar com o Asaas de producao.',now(),'feat/asaas-integração','Aprovar/rejeitar/editar uma conta e ver o status refletir; editar uma solicitacao pendente.',19),
+
+  -- ===== A FAZER (22 + 7 extras) ========================================
+  ('FIN-020','Subir o ERP num servidor com IP/URL publica fixa','O ERP precisa de URL publica para o Asaas enviar webhooks.','Sem URL publica os webhooks nao chegam; a integracao nao funciona em producao.','infra','Integração Asaas','todo','critica','alta','Pre-requisito de TUDO Asaas em producao e o proximo passo (testar com Asaas real). Destrava a feature inteira.',now(),'feat/asaas-deploy','Acessar /api/webhooks/asaas/validar-saque na URL publica e receber JSON (nao 404).',20),
+  ('FIN-021','Testar webhook PAYMENT_BILL_PAID em producao','Confirmar que o Asaas avisa o ERP quando um boleto e pago.','Sem isso o status nunca atualiza sozinho; alguem teria que marcar manual.','infra','Integração Asaas','todo','critica','alta','E exatamente o teste em producao que falta; depende de FIN-020.',now(),'feat/asaas-webhook-pago','Criar conta, gerar boleto, aprovar; ao pagar, situacao muda para pago sozinho.',21),
+  ('FIN-022','Botao de sincronizacao manual (plano B do webhook)','Consulta o Asaas e atualiza status pendentes sob demanda.','Resiliencia se o webhook falhar por queda de internet.','melhoria','Integração Asaas','todo','media','media','Fallback util; nao bloqueia o go-live.',now(),'feat/asaas-sync','Desligar webhook, aprovar, clicar Sincronizar e ver status atualizar.',22),
+  ('FIN-023','Botao cancelar pagamento Asaas ja aprovado','Cancela bill/transfer no Asaas apos aprovacao.','Desfaz aprovacao por engano (dinheiro real).','melhoria','Integração Asaas','todo','alta','media','Importante assim que entrar em producao; nao bloqueia o primeiro teste.',now(),'feat/asaas-cancelar','Aprovar PIX de R$1, clicar Cancelar e ver badge Cancelado.',23),
+  ('FIN-024','Auditoria de aprovacoes de pagamento','Registro e tela de quem aprovou, valor, tipo e data.','Governanca: rastrear quem mexeu no dinheiro.','seguranca','Integração Asaas','todo','alta','media','Governanca financeira; alta por envolver dinheiro, sem travar o go-live.',now(),'feat/asaas-auditoria','Aprovar como admin e ver no historico quem aprovou, valor, tipo e data.',24),
+  ('FIN-025','Retry automatico na API do Asaas','3 tentativas com backoff e aviso na UI.','Evita reclicar quando a API instabiliza.','melhoria','Integração Asaas','todo','media','baixa','Conveniencia/resiliencia; baixa urgencia.',now(),'feat/asaas-retry','Simular timeout, ver Tentando novamente e erro apos 3 falhas.',25),
+  ('FIN-026','Icone por tipo de pagamento no badge','Raio para PIX, documento para Boleto, predio para TED.','Leitura visual mais rapida da tabela.','melhoria','Integração Asaas','todo','baixa','baixa','Cosmetico.',now(),'feat/asaas-badge-icones','Ver icone diferente para PIX, Boleto e TED.',26),
+  ('FIN-027','Botao Enviar Cobranca Asaas no A Receber','Gera boleto/PIX de cobranca para o cliente direto no ERP.','Evita entrar no site do Asaas para cobrar.','melhoria','Contas a Receber','todo','media','media','Expande a integracao para o A Receber; foco atual e A Pagar, entra depois do go-live.',now(),'feat/asaas-cobranca-receber','Em A Receber clicar Enviar Cobranca, escolher PIX e ver QR Code e link.',27),
+  ('FIN-028','Garantir que a chave do Asaas nunca aparece nos logs','Sanitizar a chave em todos os console.error.','Chave de producao real nao pode vazar.','seguranca','Integração Asaas','todo','alta','alta','Fazer ANTES de operar em producao: a chave de producao ja esta configurada; vazamento daria acesso a pagamentos.',now(),'feat/asaas-sanitizar-logs','Forcar erro na API e verificar que o log nao mostra a chave.',28),
+  ('FIN-029','Paginacao e busca no A Receber','Mesmo padrao do A Pagar: API paginada, busca e cards via SQL.','Hoje so mostra 200 contas; o resto fica invisivel.','melhoria','Contas a Receber','todo','alta','alta','Bloqueio de dados: contas a receber acima de 200 somem da tela.',now(),'feat/receber-paginacao','Ver paginacao e busca; navegar entre paginas com mais de 200 contas.',29),
+  ('FIN-030','Corrigir totais dos cards no A Receber','Totais devem somar via SQL no banco, nao so sobre 200 registros.','Cards mostram valor errado e levam a decisao errada sobre dinheiro.','bug','Contas a Receber','todo','alta','alta','Bug financeiro: numero errado de dinheiro a receber.',now(),'fix/receber-kpis','Comparar SUM(valor) no banco com o card Total a Receber; devem bater.',30),
+  ('FIN-031','Paginacao na tela de Caixa','15 por pagina; carregar rapido com muitos pagamentos.','Tela trava com mais de 500 pagamentos.','performance','Caixa & Conciliação','todo','alta','media','Afeta o uso diario em dias de pico.',now(),'feat/caixa-paginacao','Com 800 pagamentos a tela carrega rapido, 15 por pagina.',31),
+  ('FIN-032','Paginacao na Conciliacao Bancaria','Paginar lancamentos com total correto.','Muitos lancamentos quebram a tela.','performance','Caixa & Conciliação','todo','media','media','Mesmo problema do Caixa, menor frequencia.',now(),'feat/conciliacao-paginacao','Navegar entre paginas de lancamentos com total correto.',32),
+  ('FIN-033','Corrigir refresh ao confirmar motoboy','Atualizar estado no lugar de recarregar a pagina.','Refresh faz perder a posicao na tela.','bug','Caixa & Conciliação','todo','media','baixa','Irritacao de UX; nao trava a operacao.',now(),'fix/motoboy-refresh','Confirmar motoboy sem a pagina recarregar (sem F5).',33),
+  ('FIN-034','Nome da consultora aparece como numero no fechamento','O id da consultora vai no campo de nome.','Relatorio de comissao sai com numero no lugar do nome.','bug','Comissões','todo','alta','media','Mexe com pagamento de pessoas; alta. Sem fogo agora pois o fechamento nao roda todo dia.',now(),'fix/comissoes-nome-consultora','Criar fechamento para Maria e ver Maria, nao 5.',34),
+  ('FIN-035','Gerar fechamentos de comissao de qualquer mes','Botao hoje esta fixo em maio.','Em outros meses gera o mes errado; precisa de dev manual.','bug','Comissões','todo','alta','media','Bug que volta todo mes; alta, sem ser fogo hoje.',now(),'fix/comissoes-mes-dinamico','Selecionar Junho 2026 e gerar fechamentos de junho.',35),
+  ('FIN-036','Indice para acelerar a busca no banco','Indice GIN/pg_trgm nas colunas de busca.','Busca degrada conforme o banco cresce.','performance','Segurança & Performance','todo','media','media','Preventivo; piora com o tempo.',now(),'perf/indice-busca','EXPLAIN ANALYZE antes/depois com tempo bem menor.',36),
+  ('FIN-037','Rate limit na API','Limitar requisicoes por usuario por minuto.','Previne abuso e sobrecarga.','seguranca','Segurança & Performance','todo','media','baixa','Endurecimento; baixa urgencia.',now(),'feat/rate-limit','Disparar 31 chamadas em 1 min; a 31a retorna 429.',37),
+  ('FIN-038','Verificar autenticacao nas APIs de motoboy e conciliacao','Revalidar permissao no servidor, nao so esconder o botao.','Hoje da pra chamar a API direto e confirmar pagamento sem permissao.','seguranca','Segurança & Performance','todo','alta','alta','Falha de controle de acesso real e burlavel; risco com dinheiro.',now(),'fix/auth-apis','Chamar a API como vendedor e receber 403.',38),
+  ('FIN-039','Mover calculo de vencido para o banco','isVencido/diasAte rodam no navegador hoje.','Funcao no front pode ser alterada para mascarar contas vencidas.','seguranca','Segurança & Performance','todo','media','media','Burlavel no front; impacto medio.',now(),'fix/vencido-sql','Badge Vencido vem da API; mexer no JS do console nao muda nada.',39),
+  ('FIN-040','Confirmacao extra para pagamentos acima de R$5.000','Modal Tem certeza antes de processar valores altos.','Evita erro humano em valores altos.','seguranca','Segurança & Performance','todo','alta','media','Mais relevante com Asaas em producao (dinheiro real saindo).',now(),'feat/confirma-valor-alto','Aprovar R$10.000 mostra Tem certeza; cancelar nao processa.',40),
+  ('FIN-041','Remover colunas do Inter do banco','Drop das colunas inter_ com backup previo, homolog depois producao.','Limpeza de colunas obsoletas.','limpeza','Limpeza','todo','baixa','baixa','Nao urgente; requer backup e cuidado. Fazer por ultimo.',now(),'cleanup/remover-inter','Definir subtarefas na execucao; requer backup antes.',41),
+  ('FIN-042','Dispensar sugestao falsa de conciliacao','Botao para descartar sugestoes erradas.','Sugestoes erradas acumulam e poluem a lista.','melhoria','Caixa & Conciliação','todo','media','baixa','Extra do levantamento. Melhora a conciliacao; baixa urgencia.',now(),'feat/conciliacao-dispensar','Clicar Dispensar numa sugestao e ela sumir da lista.',42),
+  ('FIN-043','Toast ao reprocessar extrato','Mostrar progresso e resultado do reprocessamento.','Hoje nao mostra se funcionou.','melhoria','Caixa & Conciliação','todo','baixa','baixa','Extra do levantamento. Feedback de UX; baixa.',now(),'feat/extrato-toast','Clicar Reprocessar e ver Reprocessando e depois ok ou erro.',43),
+  ('FIN-044','Centralizar regras de permissao','Regras hoje espalhadas em 5 arquivos.','Regras espalhadas viram risco de seguranca inconsistente.','refatoracao','Segurança & Performance','todo','media','media','Extra do levantamento. Divida tecnica que e risco de seguranca; bom fazer junto de FIN-038.',now(),'refactor/roles','Adicionar um papel num lugar central e valer em todas as telas.',44),
+  ('FIN-045','Componentes reutilizaveis (cards, campos)','Hoje ha 5 copias de cada componente.','Manutencao dificil; mudanca precisa ser feita em varios lugares.','refatoracao','Organização','todo','baixa','baixa','Extra do levantamento. Qualidade de codigo; baixa urgencia.',now(),'refactor/componentes','npm run dev sem quebra visual apos extrair os componentes.',45),
+  ('FIN-046','Centralizar as cores da marca','Hoje ha 3 copias da paleta.','Trocar uma cor exige mexer em varios lugares.','refatoracao','Organização','todo','baixa','baixa','Extra do levantamento. Cosmetico/qualidade; baixa.',now(),'refactor/tema','Mudar a cor no tema e refletir em todo o ERP.',46),
+  ('FIN-047','Componente de paginacao reutilizavel','Um componente unico de paginacao.','6 telas vao precisar de paginacao.','refatoracao','Organização','todo','media','media','Extra do levantamento. Habilitador: se feito antes, acelera FIN-029/031/032 e evita 6 copias.',now(),'refactor/paginacao','Usar o mesmo componente em 2 telas com comportamento igual.',47),
+  ('FIN-048','Sistema de notificacoes (toast)','Substituir o alert do navegador por toast.','UI mais profissional e consistente.','melhoria','Organização','todo','baixa','baixa','Extra do levantamento. UX; baixa.',now(),'feat/toast','Simular erro e ver toast vermelho sumir em 3s.',48)
+) as v(codigo, titulo, descricao, impacto, tipo, categoria, status, prioridade, urgencia, analise_ia, analisado_em, branch, criterio_teste, ordem)
+on conflict (modulo_id, codigo) do nothing;

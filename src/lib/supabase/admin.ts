@@ -2,9 +2,9 @@ import "server-only";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Cliente Supabase com a service_role key.
- * USADO APENAS NO SERVIDOR (server actions). Ignora RLS, por isso a chave
- * jamais pode chegar ao navegador — toda validação acontece no backend.
+ * Cliente com a service_role key. Ignora RLS.
+ * USADO APENAS NO SERVIDOR/SCRIPTS (provisionar usuários, seed administrativo).
+ * NUNCA importar em componentes client — a chave não pode chegar ao navegador.
  */
 let cached: SupabaseClient | null = null;
 
@@ -16,15 +16,12 @@ export function supabaseAdmin(): SupabaseClient {
 
   if (!url || !key) {
     throw new Error(
-      "Variáveis NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY ausentes. Configure o .env.local.",
+      "Faltam NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY no .env.local",
     );
   }
 
   cached = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
-    // O Next.js cacheia `fetch` por padrão no App Router. Como o supabase-js
-    // usa fetch, leituras após escritas voltariam stale. Forçamos no-store
-    // para garantir dados sempre frescos (essencial nos fluxos de entrega).
     global: {
       fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
     },
