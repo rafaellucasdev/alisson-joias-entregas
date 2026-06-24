@@ -28,10 +28,10 @@ function LoginForm() {
       <form onSubmit={entrar} className="card w-full max-w-sm p-6">
         <div className="mb-5 text-center">
           <div className="text-3xl">💎</div>
-          <h1 className="mt-1 text-lg font-bold text-slate-900">
+          <h1 className="mt-1 font-display text-xl font-bold text-esmeralda-800">
             AJ Progress Tracker
           </h1>
-          <p className="text-xs text-slate-500">Progresso do ERP Alisson Joias</p>
+          <p className="text-xs text-stone-500">Progresso do ERP Alisson Joias</p>
         </div>
 
         {erro && (
@@ -80,7 +80,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (carregando) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-slate-400">
+      <div className="flex min-h-screen items-center justify-center text-sm text-stone-400">
         Carregando…
       </div>
     );
@@ -91,7 +91,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (!usuario) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-3 px-4 text-center">
-        <p className="max-w-xs text-sm text-slate-600">
+        <p className="max-w-xs text-sm text-stone-600">
           Sua conta entrou, mas ainda não tem acesso liberado. Fale com um
           administrador para liberar seu perfil.
         </p>

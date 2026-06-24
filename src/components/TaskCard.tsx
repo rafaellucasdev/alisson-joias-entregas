@@ -26,13 +26,13 @@ export function TaskCard({
     >
       <div className="mb-1 flex items-center gap-2">
         {tarefa.codigo && (
-          <span className="text-[10px] font-bold text-slate-400">{tarefa.codigo}</span>
+          <span className="text-[10px] font-bold text-esmeralda-400">{tarefa.codigo}</span>
         )}
         <span className={`badge ${corNivel[tarefa.prioridade]}`}>
           {NIVEL_LABEL[tarefa.prioridade]}
         </span>
         {tarefa.prioridade_ia && (
-          <span className="badge bg-violet-100 text-violet-700" title="Prioridade recomendada pela IA">
+          <span className="badge bg-dourado/15 text-dourado-dark" title="Prioridade recomendada pela IA">
             IA
           </span>
         )}
@@ -41,7 +41,7 @@ export function TaskCard({
         )}
       </div>
 
-      <div className="text-sm font-semibold leading-snug text-slate-800">
+      <div className="text-sm font-semibold leading-snug text-esmeralda-900">
         {tarefa.titulo}
       </div>
 
@@ -50,7 +50,7 @@ export function TaskCard({
           <span className={`badge ${corTipo[tarefa.tipo]}`}>{TIPO_LABEL[tarefa.tipo]}</span>
         )}
         {tarefa.categoria && (
-          <span className="text-[10px] text-slate-400">{tarefa.categoria}</span>
+          <span className="text-[10px] text-stone-400">{tarefa.categoria}</span>
         )}
       </div>
     </div>

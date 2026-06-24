@@ -8,40 +8,56 @@
 
 html,
 body {
-  background: #f8fafc;
-  color: #0f172a;
+  background: #fafaf7; /* creme-50 */
+  color: #1a1a1a;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Pulse suave (alertas) — igual ao ERP */
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
 }
 
 @layer components {
-  /* Inputs consistentes em todo o app */
+  /* Inputs consistentes */
   .field {
-    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/30;
+    @apply w-full rounded-lg border border-creme-300 bg-white px-3 py-2 text-sm text-esmeralda-900 outline-none transition placeholder:text-creme-400 focus:border-esmeralda-400 focus:ring-2 focus:ring-esmeralda-500/20;
   }
 
   .label {
-    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500;
+    @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-stone-500;
   }
 
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
   }
 
-  /* Ação primária: escura e elegante */
+  /* Ação primária: verde esmeralda da marca */
   .btn-primary {
-    @apply btn bg-slate-900 text-white hover:bg-slate-800;
+    @apply btn bg-esmeralda-500 text-white hover:bg-esmeralda-600;
   }
 
-  /* Ação de destaque: dourado (joalheria) */
+  /* Ação de destaque: dourado */
   .btn-accent {
-    @apply btn bg-brand text-white hover:bg-brand-dark;
+    @apply btn bg-dourado text-white hover:bg-dourado-dark;
   }
 
   .btn-ghost {
-    @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+    @apply btn border border-creme-300 bg-white text-esmeralda-700 hover:bg-creme-50;
   }
 
   .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-lg border border-creme-200 bg-white shadow-sm;
   }
 
   .badge {

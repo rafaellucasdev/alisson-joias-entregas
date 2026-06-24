@@ -1,27 +1,27 @@
 import type { Nivel, Status, Tipo } from "@/lib/types";
 
 export const corStatus: Record<Status, string> = {
-  todo: "bg-slate-100 text-slate-700",
-  doing: "bg-amber-100 text-amber-800",
-  done: "bg-emerald-100 text-emerald-700",
-  blocked: "bg-red-100 text-red-700",
-  cancelled: "bg-slate-100 text-slate-400 line-through",
+  todo: "bg-creme-100 text-esmeralda-700",
+  doing: "bg-dourado/15 text-dourado-dark",
+  done: "bg-esmeralda-50 text-esmeralda-700",
+  blocked: "bg-red-50 text-red-700",
+  cancelled: "bg-creme-100 text-creme-400 line-through",
 };
 
 export const corNivel: Record<Nivel, string> = {
-  baixa: "bg-slate-100 text-slate-600",
-  media: "bg-sky-100 text-sky-700",
-  alta: "bg-orange-100 text-orange-700",
-  critica: "bg-red-100 text-red-700",
+  baixa: "bg-creme-100 text-stone-500",
+  media: "bg-esmeralda-50 text-esmeralda-700",
+  alta: "bg-dourado/15 text-dourado-dark",
+  critica: "bg-red-50 text-red-700",
 };
 
 export const corTipo: Record<Tipo, string> = {
   bug: "bg-red-50 text-red-600",
-  melhoria: "bg-emerald-50 text-emerald-600",
-  seguranca: "bg-orange-50 text-orange-700",
+  melhoria: "bg-esmeralda-50 text-esmeralda-700",
+  seguranca: "bg-dourado/15 text-dourado-dark",
   performance: "bg-violet-50 text-violet-600",
-  refatoracao: "bg-sky-50 text-sky-600",
-  infra: "bg-slate-100 text-slate-600",
+  refatoracao: "bg-creme-100 text-stone-600",
+  infra: "bg-stone-100 text-stone-600",
   limpeza: "bg-teal-50 text-teal-600",
 };
 

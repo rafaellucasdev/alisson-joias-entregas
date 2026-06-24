@@ -9,9 +9,9 @@ import { TaskModal } from "./TaskModal";
 import { TIPO_LABEL, type Status, type Tarefa, type Tipo } from "@/lib/types";
 
 const COLUNAS: { titulo: string; status: Status; cor: string }[] = [
-  { titulo: "A fazer", status: "todo", cor: "text-slate-500" },
-  { titulo: "Fazendo", status: "doing", cor: "text-amber-600" },
-  { titulo: "Feito", status: "done", cor: "text-emerald-600" },
+  { titulo: "A fazer", status: "todo", cor: "text-stone-500" },
+  { titulo: "Fazendo", status: "doing", cor: "text-dourado-dark" },
+  { titulo: "Feito", status: "done", cor: "text-esmeralda-600" },
 ];
 
 const TIPOS: Tipo[] = [
@@ -53,7 +53,7 @@ function NovaTarefaModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onFechar}>
       <form className="card w-full max-w-md p-6" onClick={(e) => e.stopPropagation()} onSubmit={enviar}>
-        <h2 className="mb-4 text-lg font-bold text-slate-900">Nova tarefa</h2>
+        <h2 className="mb-4 font-display text-lg font-bold text-esmeralda-800">Nova tarefa</h2>
         <label className="label">Título</label>
         <input className="field mb-3" value={titulo} onChange={(e) => setTitulo(e.target.value)} autoFocus required />
         <label className="label">Tipo</label>
@@ -118,18 +118,18 @@ export function Board() {
   }
 
   if (carregando) {
-    return <p className="py-10 text-center text-sm text-slate-400">Carregando tarefas…</p>;
+    return <p className="py-10 text-center text-sm text-stone-400">Carregando tarefas…</p>;
   }
   if (!modulo) {
-    return <p className="py-10 text-center text-sm text-slate-400">Módulo Financeiro não encontrado. Rode o seed no Supabase.</p>;
+    return <p className="py-10 text-center text-sm text-stone-400">Módulo Financeiro não encontrado. Rode o seed no Supabase.</p>;
   }
 
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Financeiro</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="font-display text-2xl font-bold text-esmeralda-800">Financeiro</h1>
+          <p className="text-xs text-stone-500">
             {feitas} de {ativas} concluídas · {pct}%
           </p>
         </div>
@@ -140,8 +140,8 @@ export function Board() {
         )}
       </div>
 
-      <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-slate-200">
-        <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${pct}%` }} />
+      <div className="mb-6 h-2 w-full overflow-hidden rounded-full bg-creme-200">
+        <div className="h-full rounded-full bg-esmeralda-500 transition-all" style={{ width: `${pct}%` }} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -157,17 +157,17 @@ export function Board() {
               onDragLeave={() => setAlvoColuna((c) => (c === col.status ? null : c))}
               onDrop={(e) => onDrop(e, col.status)}
               className={`rounded-2xl border p-3 transition ${
-                alvoColuna === col.status ? "border-brand bg-brand/5" : "border-slate-200 bg-slate-50/60"
+                alvoColuna === col.status ? "border-dourado bg-dourado/10" : "border-creme-200 bg-creme-50/60"
               }`}
             >
-              <div className="mb-3 flex items-center justify-between border-b border-slate-200 pb-2">
+              <div className="mb-3 flex items-center justify-between border-b border-creme-200 pb-2">
                 <h2 className={`text-xs font-bold uppercase tracking-wide ${col.cor}`}>{col.titulo}</h2>
-                <span className="rounded-full bg-white px-2 py-0.5 text-[11px] text-slate-400">{itens.length}</span>
+                <span className="rounded-full bg-white px-2 py-0.5 text-[11px] text-stone-400">{itens.length}</span>
               </div>
               {itens.map((t) => (
                 <TaskCard key={t.id} tarefa={t} arrastavel={podeEditar} onAbrir={(x) => setSelId(x.id)} onDragStart={onDragStart} />
               ))}
-              {itens.length === 0 && <p className="py-6 text-center text-[11px] text-slate-300">Vazio</p>}
+              {itens.length === 0 && <p className="py-6 text-center text-[11px] text-stone-300">Vazio</p>}
             </div>
           );
         })}

@@ -78,13 +78,13 @@ export function TaskModal({
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
             {tarefa.codigo && (
-              <span className="text-xs font-bold text-slate-400">{tarefa.codigo}</span>
+              <span className="text-xs font-bold text-esmeralda-400">{tarefa.codigo}</span>
             )}
-            <h2 className="text-lg font-bold leading-tight text-slate-900">
+            <h2 className="font-display text-xl font-bold leading-tight text-esmeralda-800">
               {tarefa.titulo}
             </h2>
             {tarefa.categoria && (
-              <p className="text-xs text-slate-500">{tarefa.categoria}</p>
+              <p className="text-xs text-stone-500">{tarefa.categoria}</p>
             )}
           </div>
           <button className="btn-ghost px-3 py-1" onClick={onFechar}>
@@ -95,40 +95,43 @@ export function TaskModal({
         {tarefa.descricao && (
           <section className="mb-4">
             <h3 className="label">O que é</h3>
-            <p className="text-sm leading-relaxed text-slate-700">{tarefa.descricao}</p>
+            <p className="text-sm leading-relaxed text-stone-700">{tarefa.descricao}</p>
           </section>
         )}
 
         {tarefa.impacto && (
-          <section className="mb-4 rounded-lg border-l-4 border-emerald-400 bg-emerald-50 p-3">
-            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">
+          <section className="mb-4 rounded-lg border-l-4 border-esmeralda-400 bg-esmeralda-50 p-3">
+            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-esmeralda-700">
               Por que importa
             </h3>
-            <p className="text-sm text-emerald-900">{tarefa.impacto}</p>
+            <p className="text-sm text-esmeralda-900">{tarefa.impacto}</p>
           </section>
         )}
 
         {tarefa.analise_ia && (
-          <section className="mb-4 rounded-lg border-l-4 border-violet-400 bg-violet-50 p-3">
-            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-violet-700">
+          <section className="mb-4 rounded-lg border-l-4 border-dourado bg-dourado/10 p-3">
+            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-dourado-dark">
               Análise da IA — urgência {tarefa.urgencia ? NIVEL_LABEL[tarefa.urgencia] : "—"} · prioridade {NIVEL_LABEL[tarefa.prioridade]}
             </h3>
-            <p className="text-sm text-violet-900">{tarefa.analise_ia}</p>
+            <p className="text-sm text-esmeralda-900">{tarefa.analise_ia}</p>
           </section>
         )}
 
         {tarefa.criterio_teste && (
-          <section className="mb-4 rounded-lg border-l-4 border-amber-400 bg-amber-50 p-3">
-            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-amber-700">
+          <section className="mb-4 rounded-lg border-l-4 border-sky-400 bg-sky-50 p-3">
+            <h3 className="mb-1 text-[11px] font-bold uppercase tracking-wide text-sky-700">
               Critério de teste
             </h3>
-            <p className="text-sm text-amber-900">{tarefa.criterio_teste}</p>
+            <p className="text-sm text-sky-900">{tarefa.criterio_teste}</p>
           </section>
         )}
 
         {tarefa.branch && (
-          <p className="mb-4 text-xs text-slate-500">
-            Branch: <code className="rounded bg-slate-100 px-1.5 py-0.5">{tarefa.branch}</code>
+          <p className="mb-4 text-xs text-stone-500">
+            Branch:{" "}
+            <code className="rounded bg-creme-100 px-1.5 py-0.5 font-mono text-esmeralda-700">
+              {tarefa.branch}
+            </code>
           </p>
         )}
 
@@ -187,19 +190,19 @@ export function TaskModal({
           )}
           <ul className="space-y-2">
             {eventos.map((ev) => (
-              <li key={ev.id} className="rounded-lg bg-slate-50 px-3 py-2 text-sm">
+              <li key={ev.id} className="rounded-lg bg-creme-50 px-3 py-2 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-stone-400">
                     {ev.tipo}
                     {ev.autor_label ? ` · ${ev.autor_label}` : ""}
                   </span>
-                  <span className="text-[11px] text-slate-400">{formatarData(ev.criado_em)}</span>
+                  <span className="text-[11px] text-stone-400">{formatarData(ev.criado_em)}</span>
                 </div>
-                {ev.descricao && <p className="text-slate-700">{ev.descricao}</p>}
+                {ev.descricao && <p className="text-stone-700">{ev.descricao}</p>}
               </li>
             ))}
             {eventos.length === 0 && (
-              <li className="text-xs text-slate-400">Sem histórico ainda.</li>
+              <li className="text-xs text-stone-400">Sem histórico ainda.</li>
             )}
           </ul>
         </section>

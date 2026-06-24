@@ -31,7 +31,7 @@ function Brand() {
       <span className="text-2xl">💎</span>
       <div className="leading-tight">
         <div className="font-bold text-white">Alisson Joias</div>
-        <div className="text-[11px] text-slate-400">Progresso do ERP</div>
+        <div className="text-[11px] text-creme-300/60">Progresso do ERP</div>
       </div>
     </Link>
   );
@@ -50,14 +50,16 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             onClick={onNavigate}
             className={`flex items-start gap-3 rounded-xl px-3 py-2.5 text-sm transition ${
               active
-                ? "bg-brand/15 text-brand-light"
-                : "text-slate-300 hover:bg-white/5 hover:text-white"
+                ? "bg-dourado/15 text-dourado-light"
+                : "text-creme-200 hover:bg-white/5 hover:text-white"
             }`}
           >
-            <span className={active ? "text-brand-light" : "text-slate-400"}>{item.icon}</span>
+            <span className={active ? "text-dourado-light" : "text-creme-400"}>
+              {item.icon}
+            </span>
             <span>
               <span className="block font-semibold">{item.label}</span>
-              <span className="block text-[11px] text-slate-500">{item.desc}</span>
+              <span className="block text-[11px] text-creme-300/60">{item.desc}</span>
             </span>
           </Link>
         );
@@ -71,11 +73,15 @@ function Rodape() {
   return (
     <div className="absolute inset-x-0 bottom-4 px-4">
       <div className="rounded-xl bg-white/5 px-3 py-2.5">
-        <div className="truncate text-sm font-semibold text-white">{usuario?.nome}</div>
-        <div className="mb-2 text-[11px] capitalize text-slate-400">{usuario?.papel}</div>
+        <div className="truncate text-sm font-semibold text-white">
+          {usuario?.nome}
+        </div>
+        <div className="mb-2 text-[11px] capitalize text-creme-300/60">
+          {usuario?.papel}
+        </div>
         <button
           onClick={sair}
-          className="w-full rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 hover:bg-white/5 hover:text-white"
+          className="w-full rounded-lg border border-creme-200/10 px-3 py-1.5 text-xs font-medium text-creme-200 hover:bg-white/5 hover:text-white"
         >
           Sair
         </button>
@@ -89,25 +95,28 @@ export function Sidebar() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3 lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-creme-200 bg-white px-4 py-3 lg:hidden">
         <button
           aria-label="Abrir menu"
           onClick={() => setOpen(true)}
-          className="rounded-lg border border-slate-300 p-2"
+          className="rounded-lg border border-creme-300 p-2"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
           </svg>
         </button>
-        <span className="font-bold">💎 Progresso do ERP</span>
+        <span className="font-semibold text-esmeralda-700">Progresso do ERP</span>
       </header>
 
       {open && (
-        <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setOpen(false)} />
+        <div
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          onClick={() => setOpen(false)}
+        />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-slate-900 pb-6 pt-5 transition-transform lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-esmeralda-800 pb-6 pt-5 transition-transform lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -116,7 +125,7 @@ export function Sidebar() {
           <button
             aria-label="Fechar menu"
             onClick={() => setOpen(false)}
-            className="rounded-lg p-2 text-slate-400 hover:text-white lg:hidden"
+            className="rounded-lg p-2 text-creme-300 hover:text-white lg:hidden"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />

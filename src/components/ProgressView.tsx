@@ -38,47 +38,47 @@ export function ProgressView() {
   const categorias = useMemo(() => agruparPorCategoria(tarefas), [tarefas]);
 
   if (carregando) {
-    return <p className="py-10 text-center text-sm text-slate-400">Carregando…</p>;
+    return <p className="py-10 text-center text-sm text-stone-400">Carregando…</p>;
   }
 
   return (
     <div>
-      <h1 className="mb-1 text-xl font-bold text-slate-900">Progresso — Financeiro</h1>
-      <p className="mb-5 text-xs text-slate-500">Atualiza em tempo real conforme o time e a IA avançam.</p>
+      <h1 className="mb-1 font-display text-2xl font-bold text-esmeralda-800">Progresso — Financeiro</h1>
+      <p className="mb-5 text-xs text-stone-500">Atualiza em tempo real conforme o time e a IA avançam.</p>
 
       <div className="card mb-6 p-6">
         <div className="flex flex-wrap items-center gap-5">
-          <div className="text-5xl font-extrabold text-slate-900">{resumo.pct}%</div>
-          <div className="text-sm text-slate-600">
-            <strong className="text-slate-900">{resumo.feitas}</strong> de {resumo.ativas} tarefas concluídas
+          <div className="font-display text-5xl font-extrabold text-esmeralda-700">{resumo.pct}%</div>
+          <div className="text-sm text-stone-600">
+            <strong className="text-esmeralda-800">{resumo.feitas}</strong> de {resumo.ativas} tarefas concluídas
           </div>
-          <div className="h-2.5 min-w-[160px] flex-1 overflow-hidden rounded-full bg-slate-200">
-            <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${resumo.pct}%` }} />
+          <div className="h-2.5 min-w-[160px] flex-1 overflow-hidden rounded-full bg-creme-200">
+            <div className="h-full rounded-full bg-esmeralda-500 transition-all" style={{ width: `${resumo.pct}%` }} />
           </div>
         </div>
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
           {(["todo", "doing", "blocked", "done"] as Status[]).map((s) => (
-            <span key={s} className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1 text-slate-600">
-              {STATUS_LABEL[s]}: <strong>{resumo.porStatus[s]}</strong>
+            <span key={s} className="rounded-lg border border-creme-200 bg-creme-50 px-2.5 py-1 text-stone-600">
+              {STATUS_LABEL[s]}: <strong className="text-esmeralda-700">{resumo.porStatus[s]}</strong>
             </span>
           ))}
         </div>
       </div>
 
-      <h2 className="mb-3 text-sm font-bold text-slate-700">Por categoria</h2>
+      <h2 className="mb-3 text-sm font-bold text-esmeralda-700">Por categoria</h2>
       <div className="space-y-4">
         {categorias.map(([cat, { done, total }]) => {
           const p = total ? Math.round((done / total) * 100) : 0;
           return (
             <div key={cat}>
               <div className="mb-1 flex justify-between text-xs">
-                <strong className="text-slate-800">{cat}</strong>
-                <span className="text-slate-500">
+                <strong className="text-esmeralda-800">{cat}</strong>
+                <span className="text-stone-500">
                   {done}/{total}
                 </span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-slate-200">
-                <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${p}%` }} />
+              <div className="h-2 overflow-hidden rounded-full bg-creme-200">
+                <div className="h-full rounded-full bg-dourado transition-all" style={{ width: `${p}%` }} />
               </div>
             </div>
           );
